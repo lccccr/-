@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>边城(茶峒-洪安) 3天2夜自驾摄影之旅</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .tab-btn.active {
+            background-color: #047857;
+            color: white;
+            border-color: #047857;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased">
+
+    <!-- Chosen Palette: Warm Neutrals & Nature Accents (bg-stone-50, text-stone-800, accent emerald-700 and amber-600) -->
+    <!-- Application Structure Plan: The SPA uses a logical dashboard-style flow prioritizing ease of exploration. It starts with a high-level overview, followed by an interactive tabbed itinerary (to prevent information overload and allow day-by-day focus), a visual budget breakdown section, a grid-based destination/food guide for quick scanning, and concludes with crucial travel tips. This non-linear structure allows the 5 users to easily jump to the information they care about most (e.g., the drivers can check transport tips, the photographers can check attractions) without reading a linear document. -->
+    <!-- Visualization & Content Choices: Budget -> Goal: Inform/Compare -> Donut Chart (Chart.js) -> Hover interaction to see exact amounts -> Justification: Easily shows the proportion of expenses for group travel budget planning. Itinerary -> Goal: Organize -> Interactive Tabs -> Click to switch days -> Justification: Keeps the UI clean and focuses the user on one day's timeline at a time. No SVG or Mermaid used, relying on CSS styling and Chart.js Canvas. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="fixed top-0 w-full bg-stone-100/90 backdrop-blur-md border-b border-stone-200 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="font-bold text-xl text-emerald-800 tracking-wide">🚗 边城纪行</div>
+                <div class="hidden md:flex space-x-6 text-sm font-medium text-stone-600">
+                    <a href="#overview" class="hover:text-emerald-700 transition">概览</a>
+                    <a href="#itinerary" class="hover:text-emerald-700 transition">详细行程</a>
+                    <a href="#budget" class="hover:text-emerald-700 transition">预算明细</a>
+                    <a href="#guide" class="hover:text-emerald-700 transition">目的地指南</a>
+                    <a href="#tips" class="hover:text-emerald-700 transition">行前贴士</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-20">
+
+        <section id="overview" class="text-center max-w-3xl mx-auto space-y-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900 leading-tight">追寻翠翠的足迹<br><span class="text-emerald-700">边城3天2夜自驾之旅</span></h1>
+            <p class="text-lg text-stone-600">本指南为您和您的4位朋友量身定制。这里涵盖了从观音桥出发至渝湘黔三省交界处（茶峒-洪安）的完整自驾摄影路线。您可以交互式地探索每日行程、预算规划以及目的地的深度指南。</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                    <div class="text-2xl mb-2">👥</div>
+                    <div class="font-bold text-stone-800">5人同行</div>
+                    <div class="text-xs text-stone-500">3位司机轮换</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                    <div class="text-2xl mb-2">📸</div>
+                    <div class="font-bold text-stone-800">摄影徒步</div>
+                    <div class="text-xs text-stone-500">晨雾/人文/蓝调</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                    <div class="text-2xl mb-2">💰</div>
+                    <div class="font-bold text-stone-800">¥1020起</div>
+                    <div class="text-xs text-stone-500">高性价比人均</div>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                    <div class="text-2xl mb-2">🛣️</div>
+                    <div class="font-bold text-stone-800">高速免费</div>
+                    <div class="text-xs text-stone-500">清明假期利好</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="itinerary" class="space-y-6 scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-900 flex items-center gap-2">🗓️ 互动行程表</h2>
+                <p class="text-stone-600 mt-2">此模块详细规划了每日的时间节点、活动内容及交通轮换安排。点击下方日期标签，即可切换查看当天的具体行程和预算小计，帮助您合理掌握每天的游玩节奏。</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button onclick="switchTab('day1')" id="btn-day1" class="tab-btn active px-6 py-2 rounded-full border border-stone-300 font-medium transition-colors">Day 1 (4.4) 初探边城</button>
+                <button onclick="switchTab('day2')" id="btn-day2" class="tab-btn px-6 py-2 rounded-full border border-stone-300 font-medium bg-white text-stone-600 hover:bg-stone-50 transition-colors">Day 2 (4.5) 跨省徒步</button>
+                <button onclick="switchTab('day3')" id="btn-day3" class="tab-btn px-6 py-2 rounded-full border border-stone-300 font-medium bg-white text-stone-600 hover:bg-stone-50 transition-colors">Day 3 (4.6) 错峰返程</button>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
+                <div id="content-day1" class="day-content p-6 sm:p-8 block">
+                    <h3 class="text-xl font-bold text-emerald-800 mb-4">初探边城，追寻翠翠的足迹 (重点：傍晚摄影)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-stone-50 text-stone-600 border-b border-stone-200">
+                                    <th class="p-3 font-semibold">时间</th>
+                                    <th class="p-3 font-semibold">活动</th>
+                                    <th class="p-3 font-semibold">地点</th>
+                                    <th class="p-3 font-semibold">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-stone-100 text-stone-700">
+                                <tr><td class="p-3 font-medium">07:30</td><td class="p-3">集合出发</td><td class="p-3">观音桥地铁站</td><td class="p-3 text-sm">取车吃小面，直上G65包茂高速</td></tr>
+                                <tr><td class="p-3 font-medium">13:30</td><td class="p-3">抵达午餐</td><td class="p-3">湖南茶峒古镇</td><td class="p-3 text-sm">推荐品尝正宗“角角鱼”</td></tr>
+                                <tr><td class="p-3 font-medium">14:30</td><td class="p-3">办理入住</td><td class="p-3">江景客栈</td><td class="p-3 text-sm">放下行李，稍作休息</td></tr>
+                                <tr><td class="p-3 font-medium">15:30</td><td class="p-3">核心区游览</td><td class="p-3">清水江边/拉拉渡</td><td class="p-3 text-sm">体验2元一次的拉拉渡</td></tr>
+                                <tr><td class="p-3 font-medium">17:00</td><td class="p-3 text-amber-600 font-bold">摄影创作</td><td class="p-3">翠翠岛/吊脚楼</td><td class="p-3 text-sm">最佳光线：拍摄江面波光和古建筑</td></tr>
+                                <tr><td class="p-3 font-medium">19:00</td><td class="p-3">晚餐</td><td class="p-3">洪安古镇</td><td class="p-3 text-sm">米豆腐、腊肉</td></tr>
+                                <tr><td class="p-3 font-medium">20:30</td><td class="p-3">赏夜景</td><td class="p-3">沿江步道</td><td class="p-3 text-sm">拍摄对岸灯火倒影</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-6 bg-stone-50 p-4 rounded-lg flex flex-col md:flex-row gap-4 justify-between items-start md:items-center text-sm">
+                        <div><span class="font-bold text-stone-800">🚗 交通轮换：</span>单程430km。司机A(1.5h) ➔ B(1.5h) ➔ C(1.5h) ➔ A/B(1.5h)</div>
+                        <div class="text-emerald-700 font-bold">💰 预算小计：约390元/人</div>
+                    </div>
+                </div>
+
+                <div id="content-day2" class="day-content p-6 sm:p-8 hidden">
+                    <h3 class="text-xl font-bold text-emerald-800 mb-4">跨越三省，深度徒步与人文纪实 (重点：边境线徒步)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-stone-50 text-stone-600 border-b border-stone-200">
+                                    <th class="p-3 font-semibold">时间</th>
+                                    <th class="p-3 font-semibold">活动</th>
+                                    <th class="p-3 font-semibold">地点</th>
+                                    <th class="p-3 font-semibold">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-stone-100 text-stone-700">
+                                <tr><td class="p-3 font-medium">07:00</td><td class="p-3 text-amber-600 font-bold">晨雾摄影</td><td class="p-3">客栈阳台/江边</td><td class="p-3 text-sm">清水江晨雾极具仙气</td></tr>
+                                <tr><td class="p-3 font-medium">08:30</td><td class="p-3">早餐</td><td class="p-3">街边小吃摊</td><td class="p-3 text-sm">湖南米粉或油粑粑</td></tr>
+                                <tr><td class="p-3 font-medium">09:30</td><td class="p-3">跨省徒步</td><td class="p-3">一脚踏三省广场</td><td class="p-3 text-sm">向贵州方向轻徒步3-4km</td></tr>
+                                <tr><td class="p-3 font-medium">10:30</td><td class="p-3">打卡游览</td><td class="p-3">渝湘黔界碑</td><td class="p-3 text-sm">一步跨三省留念</td></tr>
+                                <tr><td class="p-3 font-medium">12:30</td><td class="p-3">午餐</td><td class="p-3">贵州迓驾镇方向</td><td class="p-3 text-sm">贵州风味小吃/农家乐</td></tr>
+                                <tr><td class="p-3 font-medium">14:00</td><td class="p-3 text-amber-600 font-bold">人文扫街</td><td class="p-3">洪安老街</td><td class="p-3 text-sm">老银行、打铁铺，适合黑白人文</td></tr>
+                                <tr><td class="p-3 font-medium">16:30</td><td class="p-3">喝茶闲聊</td><td class="p-3">江边茶馆</td><td class="p-3 text-sm">五人喝茶修图，享受慢时光</td></tr>
+                                <tr><td class="p-3 font-medium">18:00</td><td class="p-3">晚餐</td><td class="p-3">边城中心街</td><td class="p-3 text-sm">苗家血粑鸭、酸菜鱼</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-6 bg-stone-50 p-4 rounded-lg flex flex-col md:flex-row gap-4 justify-between items-start md:items-center text-sm">
+                        <div><span class="font-bold text-stone-800">🚶‍♂️ 交通方式：</span>全天步行徒步，无需动车。</div>
+                        <div class="text-emerald-700 font-bold">💰 预算小计：约320元/人</div>
+                    </div>
+                </div>
+
+                <div id="content-day3" class="day-content p-6 sm:p-8 hidden">
+                    <h3 class="text-xl font-bold text-amber-700 mb-4">告别边城，错峰返程 (⚠️ 注意：务必避开返程高峰)</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-stone-50 text-stone-600 border-b border-stone-200">
+                                    <th class="p-3 font-semibold">时间</th>
+                                    <th class="p-3 font-semibold">活动</th>
+                                    <th class="p-3 font-semibold">地点</th>
+                                    <th class="p-3 font-semibold">说明</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-stone-100 text-stone-700">
+                                <tr><td class="p-3 font-medium">07:30</td><td class="p-3">退房早餐</td><td class="p-3">客栈</td><td class="p-3 text-sm">提前收拾行李</td></tr>
+                                <tr><td class="p-3 font-medium">08:30</td><td class="p-3">采购特产</td><td class="p-3">边城菜市场</td><td class="p-3 text-sm">土猪腊肉、野生菌、米豆腐</td></tr>
+                                <tr class="bg-amber-50"><td class="p-3 font-medium text-amber-800">09:15</td><td class="p-3 font-bold text-amber-800">准时返程</td><td class="p-3 text-amber-800">边城收费站</td><td class="p-3 text-sm font-bold text-amber-800">务必上高速，避开下午极其严重的拥堵</td></tr>
+                                <tr><td class="p-3 font-medium">12:30</td><td class="p-3">午餐简餐</td><td class="p-3">武隆/彭水服务区</td><td class="p-3 text-sm">简单吃点，节省时间</td></tr>
+                                <tr><td class="p-3 font-medium">15:30</td><td class="p-3">抵达重庆</td><td class="p-3">观音桥地铁站</td><td class="p-3 text-sm">归还车辆，结束旅程</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-6 bg-stone-50 p-4 rounded-lg flex flex-col md:flex-row gap-4 justify-between items-start md:items-center text-sm">
+                        <div><span class="font-bold text-stone-800">🚗 交通轮换：</span>返程430km。司机C ➔ B ➔ A ➔ C。</div>
+                        <div class="text-emerald-700 font-bold">💰 预算小计：约200元/人</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="budget" class="space-y-6 scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-900 flex items-center gap-2">📊 数据分析：预估费用明细</h2>
+                <p class="text-stone-600 mt-2">此图表直观展示了本次自驾游的开销构成。作为5人团队，租车和油费平摊后大幅降低了人均交通成本，使整体预算保持在1020-1120元的高性价比区间。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-stone-200">
+                <div class="w-full">
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-stone-50 text-stone-600 border-b border-stone-200">
+                                <th class="p-3 font-semibold">开销类别</th>
+                                <th class="p-3 font-semibold text-right">预估(元/人)</th>
+                                <th class="p-3 font-semibold">备注说明</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-100 text-stone-700 text-sm">
+                            <tr><td class="p-3 font-bold text-stone-800">🚙 交通</td><td class="p-3 text-right font-medium">280</td><td class="p-3">租车3天900+油费500，5人平摊。<span class="text-emerald-600 font-bold">高速免费</span></td></tr>
+                            <tr><td class="p-3 font-bold text-stone-800">🏨 住宿</td><td class="p-3 text-right font-medium">350</td><td class="p-3">按150-200元/晚计算 (2晚舒适型)</td></tr>
+                            <tr><td class="p-3 font-bold text-stone-800">🍜 餐饮</td><td class="p-3 text-right font-medium">300</td><td class="p-3">5顿正餐+早餐小吃，人均60/天</td></tr>
+                            <tr><td class="p-3 font-bold text-stone-800">🛍️ 购物</td><td class="p-3 text-right font-medium">100</td><td class="p-3">特产、饮料等</td></tr>
+                            <tr><td class="p-3 font-bold text-stone-800">🎫 门票/杂费</td><td class="p-3 text-right font-medium">40</td><td class="p-3">基本无门票，含拉拉渡、停车费等</td></tr>
+                            <tr class="bg-stone-50"><td class="p-3 font-bold text-lg text-emerald-800">总计</td><td class="p-3 text-right font-bold text-lg text-emerald-800">1070</td><td class="p-3 text-xs text-stone-500">取平均值展示</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="guide" class="space-y-6 scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-900 flex items-center gap-2">🗺️ 目的地精华指南</h2>
+                <p class="text-stone-600 mt-2">为您整理了边城最值得体验的打卡点与地道美食。结合了你们团队喜欢摄影的需求，特别标注了关键的摄影建议。</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-3">🚢</div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">拉拉渡 (交界处)</h3>
+                    <p class="text-stone-600 text-sm mb-4">无动力渡船，老船夫拉钢丝过河，《边城》经典意象。单程2元。</p>
+                    <div class="bg-stone-50 p-3 rounded text-sm text-stone-700">
+                        <span class="font-bold">📸 摄影建议：</span> 站船头低角度拍对岸，或用长焦捕捉船夫沧桑的手部特写。
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-3">🗿</div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">翠翠岛</h3>
+                    <p class="text-stone-600 text-sm mb-4">江心小岛，有翠翠和黄狗雕像。乘船往返约20元，游览约半小时。</p>
+                    <div class="bg-stone-50 p-3 rounded text-sm text-stone-700">
+                        <span class="font-bold">📸 摄影建议：</span> 若不上岛，在岸边用中长焦拍摄全岛，航拍感更佳。
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-3">🏛️</div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">洪安老街 & 界碑</h3>
+                    <p class="text-stone-600 text-sm mb-4">保留六七十年代供销社、语录墙，以及一脚踏三省标志。</p>
+                    <div class="bg-stone-50 p-3 rounded text-sm text-stone-700">
+                        <span class="font-bold">📸 摄影建议：</span> 石板路和斑驳老墙是绝佳的人文黑白纪实扫街地。
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-stone-200 p-6 hover:shadow-md transition-shadow lg:col-span-3">
+                    <h3 class="text-lg font-bold text-amber-700 mb-4 border-b border-stone-100 pb-2">🍜 必吃地道美食推荐</h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <span class="font-bold text-stone-800 block mb-1">🐟 角角鱼(黄辣丁)</span>
+                            <span class="text-stone-600">清水江鱼配湖南酸汤，极其鲜美。茶峒沿江餐厅人均60-80元。</span>
+                        </div>
+                        <div>
+                            <span class="font-bold text-stone-800 block mb-1">🥣 米豆腐</span>
+                            <span class="text-stone-600">爽滑软糯，配特制红油和榨菜末，解暑解馋。</span>
+                        </div>
+                        <div>
+                            <span class="font-bold text-stone-800 block mb-1">🍘 油粑粑</span>
+                            <span class="text-stone-600">现炸特色小吃，外酥里嫩，极佳的早餐选择。</span>
+                        </div>
+                        <div>
+                            <span class="font-bold text-stone-800 block mb-1">🦆 血粑鸭</span>
+                            <span class="text-stone-600">湖南特色，糯米鸭血混合炸制与鸭肉同炒，香辣下饭。</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips" class="space-y-6 scroll-mt-24">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-900 flex items-center gap-2">⚠️ 行前与自驾贴士</h2>
+                <p class="text-stone-600 mt-2">确保旅途安全舒适的关键信息，请务必在出发前与团队成员共享。</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">🌤️</span>
+                        <h3 class="font-bold text-blue-900 text-lg">天气与穿搭装备</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-stone-700">
+                        <li><span class="font-semibold text-stone-900">气温预估：</span> 12℃ - 22℃。清明多阵雨，雨后易起雾，出片率极高。</li>
+                        <li><span class="font-semibold text-stone-900">洋葱穿衣法：</span> 内搭T恤+防风防水冲锋衣/风衣。早晚凉，中午热。</li>
+                        <li><span class="font-semibold text-stone-900">鞋履：</span> 青石板路多且湿滑，务必穿<span class="text-blue-700 font-bold">防滑防水的运动/徒步鞋</span>。</li>
+                        <li><span class="font-semibold text-stone-900">特殊装备：</span> 三脚架、偏振镜、无人机(避开高压线)、相机防雨罩、便携雨具。</li>
+                    </ul>
+                </div>
+
+                <div class="bg-amber-50/50 p-6 rounded-xl border border-amber-100">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-2xl">🚗</span>
+                        <h3 class="font-bold text-amber-900 text-lg">自驾与安全警告</h3>
+                    </div>
+                    <ul class="space-y-3 text-sm text-stone-700">
+                        <li><span class="font-semibold text-stone-900 text-red-600">返程核心预警：</span> 4月6日G65南川至巴南段下午极易严重拥堵。务必<span class="font-bold text-red-600 border-b border-red-300">早上09:15前上高速</span>！</li>
+                        <li><span class="font-semibold text-stone-900">路况防晕：</span> G65穿越武陵山区，桥隧相连弯道多。后排易晕车，<span class="font-bold">请备晕车药</span>。</li>
+                        <li><span class="font-semibold text-stone-900">租车驾驶：</span> 取车录制全车视频记录划痕。山区多隧道地段，务必提前打开车灯。</li>
+                        <li><span class="font-semibold text-stone-900">摄影尊重：</span> 拍摄当地居民(如背篓老人/船夫)时，请提前微笑示意避免反感。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center mt-12">
+        <p class="text-sm">边城自驾摄影之旅互动指南 &copy; 专属定制路线</p>
+    </footer>
+
+    <script>
+        function switchTab(dayId) {
+            document.querySelectorAll('.day-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'bg-emerald-700', 'text-white');
+                el.classList.add('bg-white', 'text-stone-600');
+            });
+            
+            const targetContent = document.getElementById('content-' + dayId);
+            if(targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('block');
+            }
+            
+            const targetBtn = document.getElementById('btn-' + dayId);
+            if(targetBtn) {
+                targetBtn.classList.remove('bg-white', 'text-stone-600');
+                targetBtn.classList.add('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('budgetChart').getContext('2d');
+            const data = {
+                labels: ['交通(租车/油费)', '住宿(2晚)', '餐饮', '购物', '门票/杂费'],
+                datasets: [{
+                    data: [280, 350, 300, 100, 40],
+                    backgroundColor: [
+                        '#047857', 
+                        '#059669', 
+                        '#d97706', 
+                        '#f59e0b', 
+                        '#78716c'  
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            };
+
+            const config = {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    family: 'system-ui',
+                                    size: 13
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ¥' + context.raw + ' /人';
+                                }
+                            },
+                            padding: 12,
+                            titleFont: { size: 14 },
+                            bodyFont: { size: 14 }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body>
+</html>
